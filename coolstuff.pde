@@ -31,48 +31,27 @@ void setup()
 	/*for (int i = 0; i < height; ++i) {
 		flakes[i] = new PVector(random(width), 0);
 	}*/
-//	directionalLight(51, 102, 126, -5, 2, 0); //r, g, b, x, y, z
-	
-/*	background(125);
-	background(192, 64, 0);
-	noStroke();
-	
-	translate(20, 50, 0);
-	sphere(30);
-	fill(255);
-	noLoop();
-	PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
-	textFont(fontA, 14);
-	stroke(255);*/
+
+	/*PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
+	textFont(fontA, 14);*/
 	stroke(255);
+	println("Hello ErrorLog!");
 }
 
-// most recent key press is stored in key
-void keyboard()
+// Most recent key press is stored in key
+void keyPressed()
 {
-	if (keyPressed) {
-		switch(key){
-		case 'b':	//changes the background colour
-		case 'B': 
-			background(125);
-			break;
-		case ' ':
-			++jump;
-		default:
-			background(0);
-			break;
-		}
+	switch(key){
+	case 'b':	//changes the background colour
+	case 'B': 
+		background(125);
+		break;
+	case ' ':
+		++jump;
+	default:
+		break;
 	}
 }
-
-/*
-mouseDragged()
-{
-	xPos = mouseX;
-	yPos = mouseY;
-}
-*/
-
 
 /** Draws a cylinder with the number of sides and 
     radii for top and bottom
@@ -115,20 +94,43 @@ void drawCylinder(int sides, float top, float bottom, float h)
 
 void drawTophat()
 {
-	drawCylinder(100, 25, 25, 2);
-	translate(0, 50, 0);
-	drawCylinder(100, 10, 10, 20);
+        pushMatrix();
+                rotateX(radians(-15));
+        	drawCylinder(100, 30, 30, 2); //brim
+                rotateX(radians(0));
+	popMatrix();
+        translate(0, 40, 0);
+	drawCylinder(100, 10, 10, 20); //top
+        fill(153);
+	drawCylinder(100, 10, 10, 4); //top
+        
 }
 
 void drawHead()
 {
 	sphere(29.0);
-
 	pushMatrix();
 		translate(0, -30, 0);
-		rotateX(radains(90));
+		rotateX(radians(90));
+                fill(0);
 		drawTophat();
 	popMatrix();
+}
+
+void drawArm()
+{
+        stroke(126);
+        line(0,0,0, 4,2,0);
+        stroke(126);
+        line(4,2,0, 4,4,0);
+        stroke(126);
+        line(4,4,0, 5,5,0);
+        stroke(126);
+        line(4,4,0, 4,5,0);
+        stroke(126);
+        line(4,4,0, 3,5,0);
+        stroke(126);
+
 }
 // Draws a snowperson based on hierarchical objects
 void drawSnowPerson()
@@ -136,51 +138,42 @@ void drawSnowPerson()
 	// Drawing bottom
 	noStroke();
 	lights();
-//	pushMatrix();
-//		translate(width/2, height/2, 0.0);
-		sphere(50.0);
-//	popMatrix();
+	sphere(50.0);
 	
 	// Drawing middle
 	pushMatrix();
-//		translate(width/2, (height/2-50), 0.0);
 		translate(0, -60, 0); //HATE THIS!
 		sphere(39.0);
+                pushMatrix();
+                        scale(25);
+                        rotateX(radians(180));
+                        drawArm();
+                popMatrix();
+                noStroke();
+                fill(255);             
 		translate(0, -55, 0);
+                //rotateX(radians(90));
 		drawHead();
 	popMatrix();
-	
-	// Drawing head
-	//pushMatrix();
-	//	translate(width/2, (height/2-90), 0.0);
-	//	sphere(29.0);
-	//	rotateX(radians(90));
-	//	rotateY(radians(30));
-	//	rotateZ(radians(15));
-	//	translate(0.0, (height/3), 0);
-	//	drawTophat();
-	//popMatrix();
 }
 
 void draw()
 {       
-	if (jump){
-		--jump;
+	if (jump) {
+	//	--jump;
 	// make that silly, obese snowman jump!
 	}
-	
-	// Handle any key presses
-	keyboard();
-	
-	//draws a line from a fixed point to the mouse pos
-	//line(150, 25, mouseX, mouseY);
-	
-	
+        pushMatrix();
+                scale(30);
+	        drawArm();
+        popMatrix();
 	translate(width/2, height/2, 0);
+        fill(255);
 	drawSnowPerson();
 	
 	
 	stroke(255);
 	//text("Hello World!", 20, 2);
-	//rprintln("Hello ErrorLog!");	
+	//println(jump);
+
 }
