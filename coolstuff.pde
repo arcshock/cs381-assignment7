@@ -25,7 +25,7 @@ void setup()
 	yPos = 0;
 	jump = 0;
 	
-	size(700,200, P3D);
+	size(700, 700, P3D);
 	frameRate(30);
 	flakes = new PVector[c];
 	/*for (int i = 0; i < height; ++i) {
@@ -52,7 +52,7 @@ void keyboard()
 {
 	if (keyPressed) {
 		switch(key){
-		case 'b':		//changes the background colour
+		case 'b':	//changes the background colour
 		case 'B': 
 			background(125);
 			break;
@@ -63,14 +63,6 @@ void keyboard()
 			break;
 		}
 	}
-
-/*	if (keyPressed) {
-		if (key == 'b' || key == 'B') {
-			background(125);
-		}else{
-			background(0);
-		}
-	}*/
 }
 
 /*
@@ -123,61 +115,68 @@ void drawCylinder(int sides, float top, float bottom, float h)
 
 void drawTophat()
 {
-	drawCylinder(100, 25, 25, 20);
-	drawCylinder(100, 50, 50, 5);
+	drawCylinder(100, 25, 25, 2);
+	translate(0, 50, 0);
+	drawCylinder(100, 10, 10, 20);
 }
 
+void drawHead()
+{
+	sphere(29.0);
+
+	pushMatrix();
+		translate(0, -30, 0);
+		rotateX(radains(90));
+		drawTophat();
+	popMatrix();
+}
 // Draws a snowperson based on hierarchical objects
 void drawSnowPerson()
 {
 	// Drawing bottom
 	noStroke();
 	lights();
-	pushMatrix();
-	translate(width/2, height/2, 0.0);
-	sphere(50.0);
-	popMatrix();
+//	pushMatrix();
+//		translate(width/2, height/2, 0.0);
+		sphere(50.0);
+//	popMatrix();
 	
 	// Drawing middle
 	pushMatrix();
-	translate(width/2, (height/2-50), 0.0);
-	sphere(39.0);
+//		translate(width/2, (height/2-50), 0.0);
+		translate(0, -60, 0); //HATE THIS!
+		sphere(39.0);
+		translate(0, -55, 0);
+		drawHead();
 	popMatrix();
 	
 	// Drawing head
-	pushMatrix();
-	translate(width/2, (height/2-90), 0.0);
-	sphere(29.0);
-	rotateX(radians(90));
-	translate(0.0,20, 0);
-	drawTophat();
-	popMatrix();
+	//pushMatrix();
+	//	translate(width/2, (height/2-90), 0.0);
+	//	sphere(29.0);
+	//	rotateX(radians(90));
+	//	rotateY(radians(30));
+	//	rotateZ(radians(15));
+	//	translate(0.0, (height/3), 0);
+	//	drawTophat();
+	//popMatrix();
 }
 
 void draw()
 {       
 	if (jump){
+		--jump;
 	// make that silly, obese snowman jump!
 	}
 	
-	/*pushMatrix();
-		resetMatrix();
-		rotateX(radians(90));
-		translate(width/4, -100,0);
-		drawTophat();
-	popMatrix();*/
-
 	// Handle any key presses
 	keyboard();
 	
 	//draws a line from a fixed point to the mouse pos
 	//line(150, 25, mouseX, mouseY);
 	
-	/*lights();
-	noStroke();
-	drawCylinder(8, 20, 20, 80);*/
 	
-	translate(0,40,0);
+	translate(width/2, height/2, 0);
 	drawSnowPerson();
 	
 	
