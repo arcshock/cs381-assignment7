@@ -122,21 +122,21 @@ void drawTophat()
 // Draws a snowperson based on hierarchical objects
 void drawSnowPerson()
 {
-	// Drawing the main body
-
-	
+	// Drawing bottom
 	noStroke();
 	lights();
 	pushMatrix();
-	translate(width/2, height/2, 0.0); //x, y, z
+	translate(width/2, height/2, 0.0);
 	sphere(50.0);
 	popMatrix();
 	
+	// Drawing middle
 	pushMatrix();
 	translate(width/2, (height/2-50), 0.0);
 	sphere(39.0);
 	popMatrix();
 	
+	// Drawing head
 	pushMatrix();
 	translate(width/2, (height/2-90), 0.0);
 	sphere(29.0);
