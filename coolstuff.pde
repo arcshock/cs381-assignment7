@@ -17,8 +17,14 @@ int c = 40;
 int xPos;
 int yPos;
 
+int jump; // number of time the jump button has been pressed
+
 void setup()
 {
+	xPos = 0;
+	yPos = 0;
+	jump = 0;
+	
 	size(700,200, P3D);
 	frameRate(30);
 	flakes = new PVector[c];
@@ -50,6 +56,8 @@ void keyboard()
 		case 'B': 
 			background(125);
 			break;
+		case ' ':
+			++jump;
 		default:
 			background(0);
 			break;
@@ -148,6 +156,10 @@ void drawSnowPerson()
 
 void draw()
 {       
+	if (jump){
+	// make that silly, obese snowman jump!
+	}
+	
 	/*pushMatrix();
 		resetMatrix();
 		rotateX(radians(90));
