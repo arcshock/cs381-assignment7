@@ -37,20 +37,85 @@ void keyboard()
 	}
 }
 
-void draw()
-{       
-	keyboard();
-	line(150, 25, mouseX, mouseY);
+/** Draws a cylinder with the number of sides and 
+    radii for top and bottom
+    Borrowed some from http://vormplus.be/blog/article/drawing-a-cylinder-with-processing */
+void drawCylinder(int sides, float top, float bottom, float h)
+{
+	float angle = 360 / sides;
+	float halfHeight = h / 2;
 	
+	// top
+	beginShape();
+	for (int i = 0; i < sides; ++i) {
+		float x = cos( radians( i * angle ) ) * top;
+		float y = sin( radians( i * angle ) ) * top;
+		vertex( x, y, -halfHeight);
+	}
+	endShape(CLOSE);
+	
+	// bottom
+	beginShape();
+	for (int i = 0; i < sides; ++i) {
+		float x = cos( radians( i * angle ) ) * bottom;
+		float y = sin( radians( i * angle ) ) * bottom;
+		vertex( x, y, halfHeight);
+	}
+	endShape(CLOSE);
+	
+	// draw body
+	beginShape(TRIANGLE_STRIP);
+	for (int i = 0; i < sides + 1; ++i) {
+		float x1 = cos( radians( i * angle ) ) * top;
+		float y1 = sin( radians( i * angle ) ) * top;
+		float x2 = cos( radians( i * angle ) ) * bottom;
+		float y2 = sin( radians( i * angle ) ) * bottom;
+		vertex( x1, y1, -halfHeight);
+		vertex( x2, y2, halfHeight);
+	}
+	endShape(CLOSE);
+}
+
+
+// Draws a snowperson based on hierarchical objects
+void drawSnowPerson()
+{
 	// Drawing the main body
 	noStroke();
 	lights();
+	pushMatrix();
 	translate(width/2, height/2, 0.0); //x, y, z
 	sphere(50.0);
+	popMatrix();
+	
+	pushMatrix();
+	translate(width/2, (height/2-50), 0.0);
+	sphere(39.0);
+	popMatrix();
+	
+	pushMatrix();
+	translate(width/2, (height/2-90), 0.0);
+	sphere(29.0);
+	popMatrix();
+}
+
+void draw()
+{       
+	// Handle any key presses
+	keyboard();
+	
+	//draws a line from a fixed point to the mouse pos
+	//line(150, 25, mouseX, mouseY);
+	
+	/*lights();
+	noStroke();
+	drawCylinder(8, 20, 20, 80);*/
+	
+	translate(0,40,0);
+	drawSnowPerson();
+	
 	
 	stroke(255);
-/*	text("Hello World!", 20, 2);
-	println("Hello ErrorLog!");
-	println("More to the error?");
-	println("Sweet");*/
+	//text("Hello World!", 20, 2);
+	//rprintln("Hello ErrorLog!");	
 }
