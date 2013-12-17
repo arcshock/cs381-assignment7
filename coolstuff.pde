@@ -4,14 +4,30 @@ Authors:
     Bucky Frost
 CS 381 Assignment 7
 File: coolstuff.pde
-Purpose: Generate web graphics! */
+Purpose: Generate web graphics! 
+
+Sources:
+Cylinder: http://vormplus.be/blog/article/drawing-a-cylinder-with-processing
+snow flakes: http://www.local-guru.net/blog/pages/advent11# */
+
+/*Globals*/
+PVector[] flakes;
+int c = 40;
+
+int xPos;
+int yPos;
 
 void setup()
 {
 	size(700,200, P3D);
-	directionalLight(51, 102, 126, -5, 2, 0); //r, g, b, x, y, z
+	frameRate(30);
+	flakes = new PVector[c];
+	/*for (int i = 0; i < height; ++i) {
+		flakes[i] = new PVector(random(width), 0);
+	}*/
+//	directionalLight(51, 102, 126, -5, 2, 0); //r, g, b, x, y, z
 	
-/*/	background(125);
+/*	background(125);
 	background(192, 64, 0);
 	noStroke();
 	
@@ -29,13 +45,34 @@ void setup()
 void keyboard()
 {
 	if (keyPressed) {
+		switch(key){
+		case 'b':		//changes the background colour
+		case 'B': 
+			background(125);
+			break;
+		default:
+			background(0);
+			break;
+		}
+	}
+
+/*	if (keyPressed) {
 		if (key == 'b' || key == 'B') {
 			background(125);
 		}else{
 			background(0);
 		}
-	}
+	}*/
 }
+
+/*
+mouseDragged()
+{
+	xPos = mouseX;
+	yPos = mouseY;
+}
+*/
+
 
 /** Draws a cylinder with the number of sides and 
     radii for top and bottom
@@ -76,11 +113,18 @@ void drawCylinder(int sides, float top, float bottom, float h)
 	endShape(CLOSE);
 }
 
+void drawTophat()
+{
+	drawCylinder(100, 25, 25, 20);
+	drawCylinder(100, 50, 50, 5);
+}
 
 // Draws a snowperson based on hierarchical objects
 void drawSnowPerson()
 {
 	// Drawing the main body
+
+	
 	noStroke();
 	lights();
 	pushMatrix();
@@ -96,11 +140,21 @@ void drawSnowPerson()
 	pushMatrix();
 	translate(width/2, (height/2-90), 0.0);
 	sphere(29.0);
+	rotateX(radians(90));
+	translate(0.0,20, 0);
+	drawTophat();
 	popMatrix();
 }
 
 void draw()
 {       
+	/*pushMatrix();
+		resetMatrix();
+		rotateX(radians(90));
+		translate(width/4, -100,0);
+		drawTophat();
+	popMatrix();*/
+
 	// Handle any key presses
 	keyboard();
 	
