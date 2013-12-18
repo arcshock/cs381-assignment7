@@ -1,22 +1,27 @@
 /*
-Authors:
-    Paul Gentemann
-    Bucky Frost
-CS 381 Assignment 7
-File: coolstuff.pde
-Purpose: Generate web graphics! 
+ *Authors:
+ *   Paul Gentemann
+ *   Bucky Frost
+ *CS 381 Assignment 7
+ *File: coolstuff.pde
+ *Purpose: Generate web graphics! 
+ *
+ *Sources:
+ *Cylinder: http://vormplus.be/blog/article/drawing-a-cylinder-with-processing
+ *snow flakes: http://www.local-guru.net/blog/pages/advent11#
+ *             http://solemone.de/demos/snow-effect-processing/ 
+ */
 
-Sources:
-Cylinder: http://vormplus.be/blog/article/drawing-a-cylinder-with-processing
-snow flakes: http://www.local-guru.net/blog/pages/advent11#
-             http://solemone.de/demos/snow-effect-processing/ */
 /*Globals*/
 int jump; // number of time the jump button has been pressed
 float jumpHeight;
 bool jumping;
 bool handleJump;
 final float JUMP_STEP = 5.8;
-final float JUMP_MAX = 20.0; 
+final float JUMP_MAX = 20.0;
+
+bool rotMid; //rotate the middle
+final float ROT_ANG_SPD = 30;
 
 bool snow; // Controls snow!
 int quantity = 100;
@@ -34,6 +39,9 @@ void setup()
         handleJump = false;
         jumping = false;
 
+        rotMid = false;
+        rotMidValue = 0.0;
+
 	snow = false;
 	size(700, 300, P3D);
 
@@ -48,8 +56,6 @@ void setup()
 
 	/*PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
 	textFont(fontA, 14);*/
-	stroke(255);
-	println("Hello ErrorLog!");
 }
 
 // Most recent key press is stored in key
@@ -62,6 +68,10 @@ void keyPressed()
 		break;
 	case ' ':
 		++jump;
+                break;
+        case 'm':       //silly dance!
+        case 'M':
+                rotMid = !rotMid;
                 break;
         case 's':       //to snow, or not to snow!
         case 'S':
@@ -118,16 +128,16 @@ void drawSquare()
 
 void drawTophat()
 {
-        pushMatrix();
-                rotateX(radians(-15));
-        	drawCylinder(100, 30, 30, 2); //brim
-                rotateX(radians(0));
-	popMatrix();
-        translate(0, 40, 0);
-	drawCylinder(100, 10, 10, 20); //top
+    //    pushMatrix();
+                rotateY(radians(-15));
+//                translate(0, 15, 0);
+        	drawCylinder(100, 35, 35, 2); //brim
+  //              rotateX(radians(0));
+//	popMatrix();
+        translate(0, 0, 20);
+	drawCylinder(100, 20, 20, 40); //top
         fill(153);
-        translate(0, 0, -1);
-	drawCylinder(100, 10, 10, 4); //top
+	drawCylinder(100, 21, 21, 4); //top
         
 }
 
@@ -154,10 +164,8 @@ void drawHead()
        
         // draw the tophat, such a classy gent!
 	pushMatrix();
-		translate(0, (-30 - jumpHeight/2), 0);
+		translate(-5, (-25 - jumpHeight/2), 0);
 		rotateX(radians(90));
-//              fill(0);
-        //        lights();
 		drawTophat();
 	popMatrix();
 
@@ -172,6 +180,7 @@ void drawHead()
 void drawArm()
 {
         stroke(126);
+        strokeWeight(4);
         line(0,0,0, 4,2,0);
         line(4,2,0, 4,4,0);
         line(4,4,0, 5,5,0);
@@ -192,7 +201,9 @@ void drawSnowPerson()
 	// Drawing middle
 	pushMatrix();
 		translate(0, (-60 - jumpHeight), 0); //HATE THIS!
+                rotateY(radians(rotMidValue));
 		sphere(39.0);
+
                 pushMatrix();
                         scale(15);
                         rotateX(radians(180));
@@ -200,10 +211,8 @@ void drawSnowPerson()
                         rotateY(radians(180));
                         drawArm();
                 popMatrix();
-                noStroke();
                 fill(255);             
 		translate(0, (-55 - jumpHeight), 0);
-                //rotateX(radians(90));
 		drawHead();
 	popMatrix();
 }
@@ -241,7 +250,7 @@ void draw()
         if (snow) {
                 drawSnow();
         } else {
-                background(17);
+                background(172);
         }
         
         if (handleJump) {
@@ -265,6 +274,11 @@ void draw()
                                 jumpHeight += JUMP_STEP;
                 }
         }
+
+        if (rotMid) {
+                rotMidValue += ROT_ANG_SPD;
+        }
+
 
 /*        if (!jumping && jumpHeight > 0) {
                 jumpHeight -= 0.2;
