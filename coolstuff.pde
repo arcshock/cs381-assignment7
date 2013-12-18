@@ -11,13 +11,8 @@ Cylinder: http://vormplus.be/blog/article/drawing-a-cylinder-with-processing
 snow flakes: http://www.local-guru.net/blog/pages/advent11#
              http://solemone.de/demos/snow-effect-processing/ */
 /*Globals*/
-PVector[] flakes;
-int c = 40;
-
-int xPos;
-int yPos;
-
 int jump; // number of time the jump button has been pressed
+int jumpHeight;
 bool snow; // Controls snow!
 int quantity = 100;
 float [] xPosition = new float[quantity];
@@ -29,24 +24,19 @@ int maxFlakeSize = 5;
 
 void setup()
 {
-	xPos = 0;
-	yPos = 0;
 	jump = 0;
+        jumpHeight = 0;
 	snow = false;
 	size(700, 300, P3D);
 
 	frameRate(30);
-	flakes = new PVector[c];
 
-         for(int i = 0; i < quantity; i++) {
-    flakeSize[i] = round(random(minFlakeSize, maxFlakeSize));
-    xPosition[i] = random(0, width);
-    yPosition[i] = random(0, height);
-    direction[i] = round(random(0, 1));
-  }
-	/*for (int i = 0; i < height; ++i) {
-		flakes[i] = new PVector(random(width), 0);
-	}*/
+        for(int i = 0; i < quantity; i++) {
+                flakeSize[i] = round(random(minFlakeSize, maxFlakeSize));
+                xPosition[i] = random(0, width);
+                yPosition[i] = random(0, height);
+                direction[i] = round(random(0, 1));
+        }
 
 	/*PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
 	textFont(fontA, 14);*/
@@ -133,6 +123,7 @@ void drawTophat()
 
 void drawHead()
 {
+        // head
 	sphere(29.0);
 
         // draw the snowman's left eye
@@ -155,15 +146,15 @@ void drawHead()
 	pushMatrix();
 		translate(0, -30, 0);
 		rotateX(radians(90));
-                fill(0);
-                lights();
+//              fill(0);
+        //        lights();
 		drawTophat();
 	popMatrix();
 
         // give that snowman a nose!
+                fill(0xFF7F00); //make orange
         pushMatrix();
                 translate(0,10,29);
-                fill(57); //make orange or texture it!
                 drawCylinder(50, 0, 4, 7);
         popMatrix();
 }
@@ -209,35 +200,39 @@ void drawSnowPerson()
 // Snow
 void drawSnow()
 {
-        background(0);
-    noStroke();
-  smooth();
-for(int i = 0; i < xPosition.length; i++) {
+        background(17);
+        noStroke();
+        smooth();
+        fill(255);
+
+        for(int i = 0; i < xPosition.length; i++) {
+                ellipse(xPosition[i], yPosition[i], flakeSize[i], flakeSize[i]);
     
-    ellipse(xPosition[i], yPosition[i], flakeSize[i], flakeSize[i]);
+                if(direction[i] == 0) {
+                        xPosition[i] += map(flakeSize[i], minFlakeSize, maxFlakeSize, .1, .5);
+                } else {
+                        xPosition[i] -= map(flakeSize[i], minFlakeSize, maxFlakeSize, .1, .5);
+                }
     
-    if(direction[i] == 0) {
-      xPosition[i] += map(flakeSize[i], minFlakeSize, maxFlakeSize, .1, .5);
-    } else {
-      xPosition[i] -= map(flakeSize[i], minFlakeSize, maxFlakeSize, .1, .5);
-    }
+                yPosition[i] += flakeSize[i] + direction[i]; 
     
-    yPosition[i] += flakeSize[i] + direction[i]; 
+                if(xPosition[i] > width + flakeSize[i] || 
+                   xPosition[i] < -flakeSize[i] || 
+                   yPosition[i] > height + flakeSize[i]) {
+                        xPosition[i] = random(0, width);
+                        yPosition[i] = -flakeSize[i];
+                }
     
-    if(xPosition[i] > width + flakeSize[i] || xPosition[i] < -flakeSize[i] || yPosition[i] > height + flakeSize[i]) {
-      xPosition[i] = random(0, width);
-      yPosition[i] = -flakeSize[i];
-    }
-    
-  }
+        }
 }
 void draw()
 {      
-        if (snow){
+        if (snow) {
                 drawSnow();
-        }else{
-                background(0);
+        } else {
+                background(17);
         }
+
 	if (jump) {
 	//	--jump;
 	// make that silly, obese snowman jump!
@@ -246,11 +241,10 @@ void draw()
         pushMatrix();
         popMatrix();
 	
-        translate(width/2, (height - 70), 0);
+        translate(width/2, (height - 55), 0);
         fill(255);
 	drawSnowPerson();
 	
-	stroke(255);
 	//text("Hello World!", 20, 2);
 	//println(jump);
 }
