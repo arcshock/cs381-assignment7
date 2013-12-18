@@ -69,11 +69,11 @@ void keyPressed()
 	case ' ':
 		++jump;
                 break;
-        case 'm':       //silly dance!
+        case 'm':       // silly dance!
         case 'M':
                 rotMid = !rotMid;
                 break;
-        case 's':       //to snow, or not to snow!
+        case 's':       // To snow, or not to snow!
         case 'S':
                 snow = !snow
                 break;
@@ -128,17 +128,12 @@ void drawSquare()
 
 void drawTophat()
 {
-    //    pushMatrix();
-                rotateY(radians(-15));
-//                translate(0, 15, 0);
-        	drawCylinder(100, 35, 35, 2); //brim
-  //              rotateX(radians(0));
-//	popMatrix();
+        rotateY(radians(-15));
+        drawCylinder(100, 35, 35, 2); //brim
         translate(0, 0, 20);
 	drawCylinder(100, 20, 20, 40); //top
         fill(153);
 	drawCylinder(100, 21, 21, 4); //top
-        
 }
 
 void drawHead()
@@ -203,7 +198,8 @@ void drawSnowPerson()
 		translate(0, (-60 - jumpHeight), 0); //HATE THIS!
                 rotateY(radians(rotMidValue));
 		sphere(39.0);
-
+                
+                // Give him arms to organize the universe!
                 pushMatrix();
                         scale(15);
                         rotateX(radians(180));
