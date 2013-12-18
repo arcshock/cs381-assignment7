@@ -54,8 +54,8 @@ void setup()
                 direction[i] = round(random(0, 1));
         }
 
-	/*PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
-	textFont(fontA, 14);*/
+        PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
+	textFont(fontA, 28);
 }
 
 // Most recent key press is stored in key
@@ -129,11 +129,11 @@ void drawSquare()
 void drawTophat()
 {
         rotateY(radians(-15));
-        drawCylinder(100, 35, 35, 2); //brim
+        drawCylinder(100, 35, 35, 2); // brim
         translate(0, 0, 20);
-	drawCylinder(100, 20, 20, 40); //top
-        fill(153);
-	drawCylinder(100, 21, 21, 4); //top
+	drawCylinder(100, 20, 20, 40); // top
+        fill(#FF0000);
+	drawCylinder(100, 21, 21, 4); // ribbon
 }
 
 void drawHead()
@@ -151,7 +151,7 @@ void drawHead()
 
         // draw the snowman's right eye
         pushMatrix();
-                translate(-16,-10,29);
+                translate(-18,-10,29);
                 scale(13);
                 fill(0);
                 drawSquare();
@@ -165,10 +165,10 @@ void drawHead()
 	popMatrix();
 
         // give that snowman a nose!
-                fill(0xFF7F00); //make orange
         pushMatrix();
-                translate(0,10,29);
-                drawCylinder(50, 0, 4, 7);
+                fill(#FF7F00); //make orange
+                translate(-0, 4, 29);
+                drawCylinder(50, 9, 0, 25);
         popMatrix();
 }
 
@@ -189,7 +189,6 @@ void drawSnowPerson()
 {
 	// Drawing bottom
 	noStroke();
-	lights();
         translate(0, -jumpHeight, 0);
 	sphere(50.0);
 	
@@ -216,7 +215,7 @@ void drawSnowPerson()
 // Snow
 void drawSnow()
 {
-        background(17);
+        background(95);
         noStroke();
         smooth();
         fill(255);
@@ -242,8 +241,16 @@ void drawSnow()
         }
 }
 void draw()
-{      
+{     
+
+  	lights();
+        directionalLight(128, 128, 128, 0, 0, 1);
+        ambientLight(58, 58, 58, 0, 0, 1);
+//        spotLight(20, 20, 100, 10, 10, 10, 30, .9);
+        spotLight(1, 102, 126, 80, 20, 40, width/2, 0, 0, radians(60), 100);
         if (snow) {
+                fill(#FFE600);
+        	text("Winter Break!", 20, 10);
                 drawSnow();
         } else {
                 background(172);
@@ -276,32 +283,8 @@ void draw()
         }
 
 
-/*        if (!jumping && jumpHeight > 0) {
-                jumpHeight -= 0.2;
-        }
-      
-	// make that silly, obese snowman jump!
-	if (jump && !jumping) {
-        	--jump;
-                jumping = !jumping;
-                if (jumpHeight < JUMP_MAX)
-                        jumpHeight += 0.2;
-	} 
-
-        if (jumping && jumpHeight < JUMP_MAX) {
-                jumpHeight += 0.2;
-        } else {
-                jumping = !jumping;
-        }*/
-
-        pushMatrix();
-        popMatrix();
-	
         translate(width/2, (height - 55), 0);
         fill(255);
 	drawSnowPerson();
-	
-	//text("Hello World!", 20, 2);
-//        println("jump" + jump);
-//        println(jumpHeight);
+
 }
