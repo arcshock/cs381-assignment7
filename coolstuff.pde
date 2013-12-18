@@ -12,7 +12,12 @@ snow flakes: http://www.local-guru.net/blog/pages/advent11#
              http://solemone.de/demos/snow-effect-processing/ */
 /*Globals*/
 int jump; // number of time the jump button has been pressed
-int jumpHeight;
+float jumpHeight;
+bool jumping;
+bool handleJump;
+final float JUMP_STEP = 5.8;
+final float JUMP_MAX = 20.0; 
+
 bool snow; // Controls snow!
 int quantity = 100;
 float [] xPosition = new float[quantity];
@@ -26,6 +31,9 @@ void setup()
 {
 	jump = 0;
         jumpHeight = 0;
+        handleJump = false;
+        jumping = false;
+
 	snow = false;
 	size(700, 300, P3D);
 
@@ -54,9 +62,11 @@ void keyPressed()
 		break;
 	case ' ':
 		++jump;
+                break;
         case 's':       //to snow, or not to snow!
         case 'S':
-                snow = !snow               
+                snow = !snow
+                break;
 	default:
 		break;
 	}
@@ -144,7 +154,7 @@ void drawHead()
        
         // draw the tophat, such a classy gent!
 	pushMatrix();
-		translate(0, -30, 0);
+		translate(0, (-30 - jumpHeight/2), 0);
 		rotateX(radians(90));
 //              fill(0);
         //        lights();
@@ -176,11 +186,12 @@ void drawSnowPerson()
 	// Drawing bottom
 	noStroke();
 	lights();
+        translate(0, -jumpHeight, 0);
 	sphere(50.0);
 	
 	// Drawing middle
 	pushMatrix();
-		translate(0, -60, 0); //HATE THIS!
+		translate(0, (-60 - jumpHeight), 0); //HATE THIS!
 		sphere(39.0);
                 pushMatrix();
                         scale(15);
@@ -191,7 +202,7 @@ void drawSnowPerson()
                 popMatrix();
                 noStroke();
                 fill(255);             
-		translate(0, -55, 0);
+		translate(0, (-55 - jumpHeight), 0);
                 //rotateX(radians(90));
 		drawHead();
 	popMatrix();
@@ -232,11 +243,46 @@ void draw()
         } else {
                 background(17);
         }
+        
+        if (handleJump) {
+                if (jumpHeight > JUMP_MAX) {
+                        handleJump = !handleJump;
+                } else {
+                        jumpHeight += JUMP_STEP;
+                }
+        } else {
+                if (jumpHeight > 0)
+                        jumpHeight -= JUMP_STEP;
+        }
 
-	if (jump) {
-	//	--jump;
+        if (!handleJump && jumpHeight > 0) {
+                jumpHeight -= JUMP_STEP;
+        } else {               
+                if (jump && !handleJump) {
+                        --jump;
+                        handleJump = true;
+                        if (jumpHeight < JUMP_MAX)
+                                jumpHeight += JUMP_STEP;
+                }
+        }
+
+/*        if (!jumping && jumpHeight > 0) {
+                jumpHeight -= 0.2;
+        }
+      
 	// make that silly, obese snowman jump!
-	}
+	if (jump && !jumping) {
+        	--jump;
+                jumping = !jumping;
+                if (jumpHeight < JUMP_MAX)
+                        jumpHeight += 0.2;
+	} 
+
+        if (jumping && jumpHeight < JUMP_MAX) {
+                jumpHeight += 0.2;
+        } else {
+                jumping = !jumping;
+        }*/
 
         pushMatrix();
         popMatrix();
@@ -246,5 +292,6 @@ void draw()
 	drawSnowPerson();
 	
 	//text("Hello World!", 20, 2);
-	//println(jump);
+//        println("jump" + jump);
+//        println(jumpHeight);
 }
