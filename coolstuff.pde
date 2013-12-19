@@ -6,7 +6,7 @@
  *File: coolstuff.pde
  *Purpose: Generate web graphics! 
  *
- *Sources:
+ *Sources
  *Cylinder: http://vormplus.be/blog/article/drawing-a-cylinder-with-processing
  *snow flakes: http://www.local-guru.net/blog/pages/advent11#
  *             http://solemone.de/demos/snow-effect-processing/ 
@@ -17,10 +17,10 @@ int jump; // number of time the jump button has been pressed
 float jumpHeight;
 bool jumping;
 bool handleJump;
-final float JUMP_STEP = 5.8;
-final float JUMP_MAX = 20.0;
+final float JUMP_STEP = 5.8; // how much to increment jump
+final float JUMP_MAX = 20.0; // max height of jump
 
-bool rotMid; //rotate the middle
+bool rotMid; // rotate the middle
 final float ROT_ANG_SPD = 30;
 
 bool snow; // Controls snow!
@@ -32,44 +32,50 @@ int [] direction = new int[quantity];
 int minFlakeSize = 1;
 int maxFlakeSize = 5;
 
+// Init function
 void setup()
 {
+        // init jump related vars
 	jump = 0;
         jumpHeight = 0;
         handleJump = false;
         jumping = false;
 
+        // init rotating related vars
         rotMid = false;
         rotMidValue = 0.0;
 
+        // init snow related var(s)
 	snow = false;
-	size(700, 300, P3D);
 
+	size(700, 300, P3D);
 	frameRate(30);
 
+        // init for snowing
         for(int i = 0; i < quantity; i++) {
                 flakeSize[i] = round(random(minFlakeSize, maxFlakeSize));
                 xPosition[i] = random(0, width);
                 yPosition[i] = random(0, height);
                 direction[i] = round(random(0, 1));
         }
-
-        PFont fontA = loadFont("times new roman");  //Because everything is better with a serif!
-	textFont(fontA, 28);
 }
 
-// Most recent key press is stored in key
+// keyPressed
+// controls background color,
+//          jumping,
+//          rotating,
+//          snowing
 void keyPressed()
 {
 	switch(key){
-	case 'b':	//changes the background colour
+	case 'b':	// Changes the background colour.
 	case 'B': 
 		background(125);
 		break;
 	case ' ':
 		++jump;
                 break;
-        case 'm':       // silly dance!
+        case 'm':       // silly dance! Just rotate
         case 'M':
                 rotMid = !rotMid;
                 break;
@@ -84,7 +90,8 @@ void keyPressed()
 
 /** Draws a cylinder with the number of sides and 
     radii for top and bottom
-    Borrowed some from http://vormplus.be/blog/article/drawing-a-cylinder-with-processing */
+    Borrowed from 
+    http://vormplus.be/blog/article/drawing-a-cylinder-with-processing */
 void drawCylinder(int sides, float top, float bottom, float h)
 {
 	float angle = 360 / sides;
@@ -121,11 +128,15 @@ void drawCylinder(int sides, float top, float bottom, float h)
 	endShape(CLOSE);
 }
 
+// drawSquare
+// Draws a square at the top left of screen
 void drawSquare()
 {
         rect(0,0,1,1);
 }
 
+// drawTophat
+// Draws a tophat with a red ribbon
 void drawTophat()
 {
         rotateY(radians(-15));
@@ -136,6 +147,9 @@ void drawTophat()
 	drawCylinder(100, 21, 21, 4); // ribbon
 }
 
+// drawHead
+// Draws a sphere for the head with two square eyes,
+// cone nose, and a tophat.
 void drawHead()
 {
         // head
@@ -166,12 +180,13 @@ void drawHead()
 
         // give that snowman a nose!
         pushMatrix();
-                fill(#FF7F00); //make orange
+                fill(#FF7F00); // make orange
                 translate(-0, 4, 29);
                 drawCylinder(50, 9, 0, 25);
         popMatrix();
 }
 
+// Draws a humerus, forearm, and three 'fingers'
 void drawArm()
 {
         stroke(126);
@@ -194,7 +209,7 @@ void drawSnowPerson()
 	
 	// Drawing middle
 	pushMatrix();
-		translate(0, (-60 - jumpHeight), 0); //HATE THIS!
+		translate(0, (-60 - jumpHeight), 0);
                 rotateY(radians(rotMidValue));
 		sphere(39.0);
                 
@@ -208,11 +223,12 @@ void drawSnowPerson()
                 popMatrix();
                 fill(255);             
 		translate(0, (-55 - jumpHeight), 0);
-		drawHead();
+		drawHead(); // Don't lose it
 	popMatrix();
 }
 
-// Snow
+// drawSnow()
+// Creates a snow like effect
 void drawSnow()
 {
         background(95);
@@ -240,37 +256,37 @@ void drawSnow()
     
         }
 }
+
 void draw()
 {     
-
   	lights();
         directionalLight(128, 128, 128, 0, 0, 1);
         ambientLight(58, 58, 58, 0, 0, 1);
-//        spotLight(20, 20, 100, 10, 10, 10, 30, .9);
         spotLight(1, 102, 126, 80, 20, 40, width/2, 0, 0, radians(60), 100);
+        
         if (snow) {
-                fill(#FFE600);
-        	text("Winter Break!", 20, 10);
                 drawSnow();
         } else {
                 background(172);
         }
         
+        // See if we are jumping
         if (handleJump) {
                 if (jumpHeight > JUMP_MAX) {
                         handleJump = !handleJump;
                 } else {
                         jumpHeight += JUMP_STEP;
                 }
-        } else {
+        } else {        //make sure he lands
                 if (jumpHeight > 0)
                         jumpHeight -= JUMP_STEP;
         }
 
+        // get back to the ground
         if (!handleJump && jumpHeight > 0) {
                 jumpHeight -= JUMP_STEP;
         } else {               
-                if (jump && !handleJump) {
+                if (jump && !handleJump) { // check to jump
                         --jump;
                         handleJump = true;
                         if (jumpHeight < JUMP_MAX)
@@ -278,6 +294,7 @@ void draw()
                 }
         }
 
+        // spinning
         if (rotMid) {
                 rotMidValue += ROT_ANG_SPD;
         }
@@ -285,6 +302,5 @@ void draw()
 
         translate(width/2, (height - 55), 0);
         fill(255);
-	drawSnowPerson();
-
+        drawSnowPerson();
 }
